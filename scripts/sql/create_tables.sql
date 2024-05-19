@@ -16,14 +16,16 @@ CREATE TABLE IF NOT EXISTS catalogo_banca (
 
 CREATE TABLE IF NOT EXISTS historico_aba_macroactivos (
     ingestion_year INTEGER,
-    ingestion_month INTEGER,
+    ingestion_month NUMERIC,
     ingestion_day INTEGER,
     id_sistema_cliente VARCHAR(50),
-    macroactivo VARCHAR(100),
-    cod_activo INTEGER,
+    macroactivo VARCHAR(50),
+    cod_activo VARCHAR(50),
     aba NUMERIC,
-    cod_perfil_riesgo INTEGER,
-    cod_banca VARCHAR(5),
-    year INTEGER,
-    month INTEGER
+    cod_perfil_riesgo VARCHAR(50),
+    cod_banca VARCHAR(50),
+    year VARCHAR(50),
+    month NUMERIC
 );
+
+-- PRIMARY KEY (id_sistema_cliente, ingestion_year, ingestion_month, ingestion_day, cod_activo, macroactivo, aba, cod_perfil_riesgo, cod_banca, year, month)
