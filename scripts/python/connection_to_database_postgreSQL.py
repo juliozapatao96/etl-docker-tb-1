@@ -2,7 +2,7 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-
+# Función para realizar la conexión con la base de datos
 def connect_to_posgreSQL():
     # Cargar las variables de entorno
     load_dotenv(dotenv_path='config.env')
@@ -26,12 +26,8 @@ def connect_to_posgreSQL():
         return connection
     except (Exception, psycopg2.Error) as error:
         print("Error al conectar a PostgreSQL", error)
-        print(DB_NAME)
-        print(DB_USERNAME)
-        print(DB_PASSWORD)
-        print(DB_HOST)
-        print(DB_PORT)
 
+# Función para cerrar la conexión con la base de datos
 def close_connection(connection):
     if (connection is not None):
         connection.close()
