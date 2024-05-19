@@ -1,0 +1,5 @@
+# Ignorar el entorno virtual de Python
+.venv_data_engineering_tb/
+# *.env
+__pycache__/
+*.csv
