@@ -28,7 +28,7 @@ source .venv_test_tb/Scripts/activate
 pip install -r requirements.txt
 ```
 
-4. ***Crear la base de datos en PostgreSQL**
+4. **Crear la base de datos en PostgreSQL**
 ```sql
 CREATE DATABASE portafolio_inversiones;
 ```
