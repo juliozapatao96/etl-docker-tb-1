@@ -18,7 +18,9 @@ Antes de comenzar, asegúrese de tener instalado lo siguiente en su máquina loc
 git clone https://github.com/juliozapatao96/Data-Engineering-TB-1.git
 ```
 2. **Crear entorno virtual**
-Crear entorno virutal dentro de la carpeta 'Data-Engineering-TB-1' y acceder a este:
+
+Crear entorno virutal dentro de la carpeta 'Data-Engineering-TB-1' y acceder a este entorno virual:
+
 ```bash
 py -m venv .venv_test_tb
 source .venv_test_tb/Scripts/activate
