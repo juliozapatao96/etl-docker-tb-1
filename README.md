@@ -40,7 +40,7 @@ Es necesario crear el directorio data al mismo nivel del directorio donde clonó
 
 6. **Cambiar las variables de entorno del archivo config.env**
 
-Es necesario establecer los valores correspondientes al base de datos creada en este archivo
+Es necesario establecer los valores correspondientes a la base de datos creada en este archivo
 ```bash
 DB_NAME=portafolio_inversiones
 DB_USERNAME=postgres
