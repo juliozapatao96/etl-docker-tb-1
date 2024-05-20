@@ -50,3 +50,5 @@ Finalmente ejecutar desde bash el archivo dashboard_de.py
 ```bash
 py dashboard_de.py
 ```
+
+En la consola se abre un mensaje similar al este: "Dash is running on http://127.0.0.1:8050/" debe abrir esta url para visualizar los gráficos.
