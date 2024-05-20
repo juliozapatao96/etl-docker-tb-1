@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS catalogo_activos (
 );
 
 CREATE TABLE IF NOT EXISTS catalogo_banca (
-    cod_banca VARCHAR(5) PRIMARY KEY,
+    cod_banca VARCHAR(10) PRIMARY KEY,
     banca VARCHAR(50)
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS historico_aba_macroactivos (
     cod_activo VARCHAR(50),
     aba NUMERIC,
     cod_perfil_riesgo VARCHAR(50),
-    cod_banca VARCHAR(50),
+    cod_banca VARCHAR(10),
     year VARCHAR(50),
     month NUMERIC
 );
