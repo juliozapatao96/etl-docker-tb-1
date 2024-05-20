@@ -10,9 +10,14 @@ Antes de comenzar, asegúrese de tener instalado lo siguiente en su máquina loc
 - PostgreSQL
 - Pip (administrador de paquetes de Python)
 
-## Instalación
+## Ejecución
 
 1. **Clonar el repositorio:**
 
 ```bash
 git clone https://github.com/juliozapatao96/Data-Engineering-TB-1.git
+
+2. **Instalar las dependencias:**
+```bash
+pip install -r requirements.txt
+
