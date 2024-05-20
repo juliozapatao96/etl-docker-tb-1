@@ -22,3 +22,8 @@ git clone https://github.com/juliozapatao96/Data-Engineering-TB-1.git
 ```bash
 pip install -r requirements.txt
 ```
+
+3. ***Crear la base de datos en PostgreSQL**
+```sql
+CREATE DATABASE portafolio_inversiones;
+```
