@@ -10,12 +10,11 @@ process_sql_script("drop_tables.sql")
 process_sql_script("create_tables.sql")
 
 
-#########################################
+# Etapa - Almacenamiento de datos en PostgreSQL
 
 table_names = ["cat_perfil_riesgo", "catalogo_activos", "catalogo_banca", "historico_aba_macroactivos"]
 connection = None
 
-# Etapa - Almacenamiento de datos en PostgreSQL
 connection = connect_to_posgreSQL()
 
 for table_name in table_names:
@@ -26,8 +25,17 @@ close_connection(connection)
 
 # Etapa - Procesar y transformar datos en las tablas psql
 
+
 # Script que se encarga de limpiar valores nulos y valores duplicados
 process_sql_script("data_cleaning_miss_dupl.sql")
+
+# Script que limpia los valores no deseados y valores atípicos
+process_sql_script("data_cleaning_invalid_outliers.sql")
+
+# Script que modifica los tipos de datos correctos en algunos campos
+process_sql_script("data_cleaning_data_type.sql")
+
+
 
 
 
