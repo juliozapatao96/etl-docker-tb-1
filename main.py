@@ -36,7 +36,8 @@ process_sql_script("data_cleaning_invalid_outliers.sql")
 process_sql_script("data_cleaning_data_type.sql")
 
 
-
+# Script para agregar campo date y establece las pkey y fkey en la tabla historica
+process_sql_script("data_transform.sql")
 
 
 
