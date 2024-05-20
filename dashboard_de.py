@@ -76,6 +76,15 @@ fig_pie_activos.update_traces(textposition='inside', textinfo='percent+label', i
 # Crear la gráfica de línea
 fig_line_chart_aba_mensual = px.line(df_aba_mensual, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
 
+# Crear las gráficas pie chart
+fig_pie_macroactivos_ma = px.pie(df_cliente, names='macroactivo',
+                              values='total_aba_macroactivo', title='Macroactivos del total de portafolio')
+
+# Crear las gráficas pie chart
+fig_pie_activos_a = px.pie(df_cliente, names='activo',
+                              values='total_aba', title='Activos del total de portafolio')
+fig_pie_activos_a.update_traces(textinfo='none')  # Ocultar los porcentajes
+
 # Configurar el layout de la aplicación con un arreglo 2x2
 app.layout = html.Div([
     html.Div([
@@ -97,6 +106,17 @@ app.layout = html.Div([
         dcc.Graph(
             id='pie-chart-activos',
             figure=fig_pie_activos
+        )
+    ], style={'display': 'flex', 'flex-direction': 'row'}),
+
+    html.Div([
+        dcc.Graph(
+            id='pie-chart-macroactivos-ma',
+            figure=fig_pie_macroactivos_ma
+        ),
+        dcc.Graph(
+            id='pie-chart-activos-a',
+            figure=fig_pie_activos_a
         )
     ], style={'display': 'flex', 'flex-direction': 'row'}),
 
