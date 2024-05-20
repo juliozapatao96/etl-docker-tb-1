@@ -2,3 +2,6 @@ requests
 pandas
 python-dotenv
 psycopg2
+SQLAlchemy
+plotly
+dash
