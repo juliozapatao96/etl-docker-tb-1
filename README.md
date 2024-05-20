@@ -16,8 +16,9 @@ Antes de comenzar, asegúrese de tener instalado lo siguiente en su máquina loc
 
 ```bash
 git clone https://github.com/juliozapatao96/Data-Engineering-TB-1.git
+```
 
 2. **Instalar las dependencias:**
 ```bash
 pip install -r requirements.txt
-
+```
