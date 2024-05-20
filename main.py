@@ -1,6 +1,16 @@
 from scripts.python.store_data_csv_to_postgresql import *
 from scripts.python.connection_to_database_postgreSQL import *
+from scripts.python.process_and_transform_data import process_sql_script
+
 import os
+
+# Reiniciar tablas para efectos prácticos
+
+process_sql_script("drop_tables.sql")
+process_sql_script("create_tables.sql")
+
+
+#########################################
 
 table_names = ["cat_perfil_riesgo", "catalogo_activos", "catalogo_banca", "historico_aba_macroactivos"]
 connection = None
@@ -14,6 +24,10 @@ for table_name in table_names:
 close_connection(connection)
 
 
+# Etapa - Procesar y transformar datos en las tablas psql
+
+# Script que se encarga de limpiar valores nulos y valores duplicados
+process_sql_script("data_cleaning_miss_dupl.sql")
 
 
 

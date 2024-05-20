@@ -22,7 +22,7 @@ def connect_to_posgreSQL():
             port=DB_PORT,
             database=DB_NAME
         )
-
+        print("La conexión a PostgreSQL ha sido establecida.")
         return connection
     except (Exception, psycopg2.Error) as error:
         print("Error al conectar a PostgreSQL", error)
@@ -31,7 +31,7 @@ def connect_to_posgreSQL():
 def close_connection(connection):
     if (connection is not None):
         connection.close()
-        print("La conexión a PostgreSQL ha sido cerrada.")
+        print("La conexión a PostgreSQL ha sido cerrada. \n")
 
 if __name__ == "__main__":
     connect_to_posgreSQL()
