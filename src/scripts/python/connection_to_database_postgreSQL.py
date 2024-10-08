@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Función para realizar la conexión con la base de datos
 def connect_to_posgreSQL():
     # Cargar las variables de entorno
-    load_dotenv(dotenv_path='config.env')
+    load_dotenv(dotenv_path='config/config.env')
     DB_NAME         =   os.getenv("DB_NAME")
     DB_USERNAME     =   os.getenv("DB_USERNAME")
     DB_PASSWORD     =   os.getenv("DB_PASSWORD")

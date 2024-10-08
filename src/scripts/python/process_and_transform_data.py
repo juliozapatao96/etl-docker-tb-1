@@ -23,7 +23,7 @@ def split_sql_script(script):
 
 def process_sql_script(sql_script_filename):
     # Leer el contenido del archivo SQL
-    path = os.path.join(".","scripts","sql",sql_script_filename)
+    path = os.path.join(".","src","scripts","sql",sql_script_filename)
 
     with open(path, 'r') as file:
         sql_script = file.read()

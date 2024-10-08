@@ -4,13 +4,25 @@ import dash
 from dash import dcc, html
 from sqlalchemy import create_engine
 import urllib.parse
-import os
 from dotenv import load_dotenv
+import os
 
-from scripts.python.process_and_transform_data import split_sql_script
 
+
+from src.scripts.python.process_and_transform_data import split_sql_script
+from src.etl import main as run_etl
+
+
+# Ejecutar el proceso ETL al iniciar la aplicación
+print("Iniciando el proceso ETL...")
+run_etl()
+print("Proceso ETL completado.")
+
+
+
+print("Iniciando la aplicación Dash...")        
 # Cargar las variables de entorno
-load_dotenv(dotenv_path='config.env')
+load_dotenv(dotenv_path='config/config.env')
 DB_NAME = os.getenv("DB_NAME")
 DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -26,7 +38,7 @@ engine = create_engine(db_url)
 sql_script_filename = "query_to_dash.sql"
 
 # Leer el contenido del archivo SQL
-path = os.path.join(".", "scripts", "sql", sql_script_filename)
+path = os.path.join(".","src","scripts", "sql", sql_script_filename)
 
 with open(path, 'r') as file:
     sql_script = file.read()
@@ -62,27 +74,27 @@ total_aba_sum_by_id = df_cliente.groupby('id_sistema_cliente')['total_aba'].sum(
 
 # Crear las gráficas pie chart para 'macroactivos' y 'activos'
 fig_pie_macroactivos = px.pie(df_cliente, names=total_aba_macroactivo_sum_by_id.index,
-                              values=total_aba_macroactivo_sum_by_id.values, title='Portafolio por Cliente y Macroactivos del total de portafolio')
+                            values=total_aba_macroactivo_sum_by_id.values, title='Portafolio por Cliente y Macroactivos del total de portafolio')
 # Ocultar los porcentajes menores al 5% en la gráfica de macroactivos
 fig_pie_macroactivos.update_traces(textposition='inside', textinfo='percent+label', insidetextorientation='radial',
-                                   pull=[0.1 if p < 0.05 else 0 for p in total_aba_macroactivo_sum_by_id.values])
+                                pull=[0.1 if p < 0.05 else 0 for p in total_aba_macroactivo_sum_by_id.values])
 
 fig_pie_activos = px.pie(df_cliente, names=total_aba_sum_by_id.index,
-                         values=total_aba_sum_by_id.values, title='Portafolio por Cliente y Activos del total de portafolio')
+                        values=total_aba_sum_by_id.values, title='Portafolio por Cliente y Activos del total de portafolio')
 # Ocultar los porcentajes menores al 5% en la gráfica de activos
 fig_pie_activos.update_traces(textposition='inside', textinfo='percent+label', insidetextorientation='radial',
-                              pull=[0.1 if p < 0.05 else 0 for p in total_aba_sum_by_id.values])
+                            pull=[0.1 if p < 0.05 else 0 for p in total_aba_sum_by_id.values])
 
 # Crear la gráfica de línea
 fig_line_chart_aba_mensual = px.line(df_aba_mensual, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
 
 # Crear las gráficas pie chart
 fig_pie_macroactivos_ma = px.pie(df_cliente, names='macroactivo',
-                              values='total_aba_macroactivo', title='Macroactivos del total de portafolio')
+                            values='total_aba_macroactivo', title='Macroactivos del total de portafolio')
 
 # Crear las gráficas pie chart
 fig_pie_activos_a = px.pie(df_cliente, names='activo',
-                              values='total_aba', title='Activos del total de portafolio')
+                            values='total_aba', title='Activos del total de portafolio')
 fig_pie_activos_a.update_traces(textinfo='none')  # Ocultar los porcentajes
 
 # Configurar el layout de la aplicación con un arreglo 2x2
@@ -128,5 +140,7 @@ app.layout = html.Div([
     ]),
 ])
 
+
+
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)    

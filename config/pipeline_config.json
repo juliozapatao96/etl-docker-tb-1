@@ -1,0 +1,6 @@
+{
+    "steps": [
+        {"module":"src.main", "function": "main"},
+        {"module": "src.dashboard_de", "function": "main"}
+    ]
+}
