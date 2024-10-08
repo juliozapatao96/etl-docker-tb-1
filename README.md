@@ -1,6 +1,6 @@
 # Proyecto de Ingeniería de Datos
 
-Este proyecto tiene como objetivo desarrollar un sistema de análisis de datos para gerentes comerciales de inversión. Proporciona herramientas analíticas para visualizar el portafolio de clientes, la evolución del ABA y más. La aplicación está construida con Dash, utilizando Flask como servidor, y almacena los datos en una base de datos PostgreSQL.
+Este proyecto tiene como objetivo desarrollar un sistema de análisis de datos para gerentes comerciales de inversión. Proporciona herramientas analíticas para visualizar el portafolio de clientes, la evolución del ABA y más. La aplicación está construida con Dash, utilizando Flask como servidor, extrae la información desde archivos planos CSV y almacena los datos en una base de datos PostgreSQL.
 
 ## Contenidos
 - [Requisitos Previos](#requisitos-previos)
@@ -46,9 +46,11 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
 
    Crea un directorio `data` en el mismo nivel que el directorio `Data-Engineering-TB-1`. Este directorio debe contener los archivos CSV que se utilizarán en el análisis.
 
-    proyecto-root/
-    ├── Data-Engineering-TB-1/
-    └── data/
+ ```plaintext
+   proyecto-root/
+   ├── Data-Engineering-TB-1/
+   └── data/
+ ```
 
 3. **Actualizar variables de entorno en `config.env`**:
 
