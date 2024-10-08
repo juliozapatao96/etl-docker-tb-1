@@ -38,7 +38,18 @@ CREATE DATABASE portafolio_inversiones;
 
 Es necesario crear el directorio data al mismo nivel del directorio donde clonó el proyecto, y en esta carpeta alojar los archivos CSV. Por ejemplo, si creo la carpeta 'test_project' y en esta ejecutó el comando para clonar el repositorio, entonces, dentro de esta carpeta deben estar los directorios: 'Data-Engineering-TB-1' y 'data'.
 
-6. **Ejecutar el script desde terminal bash**
+6. **Cambiar las variables de entorno del archivo config.env**
+
+Es necesario establecer los valores correspondientes a la base de datos creada en este archivo
+```bash
+DB_NAME=portafolio_inversiones
+DB_USERNAME=postgres
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+7. **Ejecutar el script desde terminal bash**
 
 Primero ejecutar main.py que se encarga de las tres primeras etapas del data pipeline
 
