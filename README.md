@@ -51,15 +51,11 @@ DB_PORT=5432
 
 7. **Ejecutar el script desde terminal bash**
 
-Primero ejecutar main.py que se encarga de las tres primeras etapas del data pipeline
+Debe ejecutar el siguiente comando, para ejecutar la aplicación Dash en un servidor de producción Waitress.
 
 ```bash
-py main.py
+waitress-serve --listen=0.0.0.0:8833 wsgi:server
 ```
 
-Finalmente ejecutar desde bash el archivo dashboard_de.py
-```bash
-py dashboard_de.py
-```
+Finalmente, en un navegador abrir la aplicación con: http://localhost:8833/
 
-En la consola se abre un mensaje similar al este: "Dash is running on http://127.0.0.1:8050/" debe abrir esta url para visualizar los gráficos.
