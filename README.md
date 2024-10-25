@@ -12,44 +12,31 @@ Este proyecto tiene como objetivo desarrollar un sistema de análisis de datos p
 ## Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina local:
-- Python 3.x
-- PostgreSQL
-- Pip (administrador de paquetes de Python)
+- Docker
+- Docker Compose
 
 ## Instalación
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/juliozapatao96/Data-Engineering-TB-1.git
+   git clone https://github.com/juliozapatao96/etl-docker-tb-1.git
+   ```
 
-2. **Crear y activar un entorno virtual**:
+## Configuración
 
-   Entra en la carpeta del proyecto y crea un entorno virtual llamado `.venv_test_tb`:
-   ```bash
-   cd Data-Engineering-TB-1
-   py -m venv .venv_test_tb
-   source .venv_test_tb/Scripts/activate
+1. **Crear y activar la base de datos**:
+   La base de datos `portafolio_inversiones` se creará automáticamente al iniciar el contenedor de PostgreSQL.
 
-3. **Instalar las dependencias**:
-   ```bash
-   pip install -r requirements.txt
-
-##  Configuración
-
-1. **Crear la base de datos en PostgreSQL**:
-   
-   Conéctate a PostgreSQL y crea una base de datos llamada `portafolio_inversiones`:
-   ```sql
-   CREATE DATABASE portafolio_inversiones;
 
 2. **Configurar el directorio de datos**:
 
-   Crea un directorio `data` en el mismo nivel que el directorio `Data-Engineering-TB-1`. Este directorio debe contener los archivos CSV que se utilizarán en el análisis.
+   Crea un directorio `data` dentro de `etl-docker-tb-1`. Este directorio debe contener los archivos CSV que se utilizarán en el análisis.
 
  ```plaintext
-   proyecto-root/
-   ├── Data-Engineering-TB-1/
+   etl-docker-tb-1/
+   ├── src/
    └── data/
+   ...
  ```
 
 3. **Actualizar variables de entorno en `config.env`**:
@@ -59,19 +46,24 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
    DB_NAME=portafolio_inversiones
    DB_USERNAME=postgres
    DB_PASSWORD=tu_contraseña
-   DB_HOST=localhost
+   DB_HOST=db
    DB_PORT=5432
 
 ## Ejecución
 
-1. **Ejecutar la aplicación**:
-
-   Para iniciar la aplicación Dash en un servidor de producción usando Waitress, ejecuta el siguiente comando en la terminal:
+1. **Iniciar los contenedores**:
+   Para iniciar la aplicación y la base de datos en Docker, ejecuta el siguiente comando en la terminal:
    ```bash
-   waitress-serve --listen=0.0.0.0:8833 wsgi:server
+   docker-compose up -d
 
+2. **Acceder a la aplicación**:
+   Finalmente, en un navegador abre la aplicación con:
+   ```bash
+   http://localhost:8833/
 
-Finalmente, en un navegador abrir la aplicación con: http://localhost:8833/
+3. **Acceder a pgAdmin (opcional)**: Puedes acceder a él en:
+   ```bash
+   http://localhost:8080/
 
 ## Imágenes de Ejemplo
 
