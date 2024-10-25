@@ -1,6 +1,6 @@
 # Ignorar el entorno virtual de Python
 .venv_data_engineering_tb/
-*.env
+config/config.env
 __pycache__/
 *.csv
 src/test.py
