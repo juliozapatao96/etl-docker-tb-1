@@ -1,14 +1,10 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   # Servicio para la base de datos PostgreSQL
   db:
     image: postgres:13
     container_name: postgres_container
-    environment:
-      POSTGRES_DB: portafolio_inversiones
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: #jucezaor@17
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -24,12 +20,20 @@ services:
       - .:/app
     ports:
       - "8833:8833"
+    networks:
+      - app_network
+
+  # Servicio para pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
     environment:
-      DB_HOST: db  # Aquí es donde la red juega un papel importante
-      DB_PORT: 5432
-      DB_NAME: portafolio_inversiones
-      DB_USERNAME: postgres
-      DB_PASSWORD: #jucezaor@17
+      PGADMIN_DEFAULT_EMAIL: julioczapatao@abc.com  # Cambia esto por tu correo
+      PGADMIN_DEFAULT_PASSWORD: 12345  # Cambia esto por tu contraseña
+    ports:
+      - "8080:80"  # Puedes cambiar el puerto si lo deseas
+    depends_on:
+      - db
     networks:
       - app_network
 
