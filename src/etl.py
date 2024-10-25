@@ -21,7 +21,7 @@ def main():
     connection = connect_to_posgreSQL()
 
     for table_name in table_names:
-        insert_data_csv_to_table(table_name,os.path.join(".","..","data", table_name) + ".csv",connection)
+        insert_data_csv_to_table(table_name,os.path.join(".","data", table_name) + ".csv",connection)
 
     close_connection(connection)
 
