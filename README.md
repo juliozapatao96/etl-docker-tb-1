@@ -41,7 +41,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
 
 3. **Actualizar variables de entorno en `config.env`**:
 
-   Configura las credenciales de la base de datos en el archivo `config.env` ubicado en el directorio principal del proyecto:
+   Configura las credenciales de la base de datos en el archivo `config.env` ubicado en el directorio principal del proyecto dentro de la carpeta `config`:
    ```bash
    DB_NAME=portafolio_inversiones
    DB_USERNAME=postgres
