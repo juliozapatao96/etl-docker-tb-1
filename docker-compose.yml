@@ -5,6 +5,10 @@ services:
   db:
     image: postgres:13
     container_name: postgres_container
+    environment:  
+      POSTGRES_DB: portafolio_inversiones  
+      POSTGRES_USER: postgres  
+      POSTGRES_PASSWORD: jucezaor@17
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
