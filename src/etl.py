@@ -9,7 +9,7 @@ def main():
     print("Ejecutando ETL...")
 
     # Reiniciar tablas para efectos prácticos
-    process_sql_script("drop_tables.sql")
+    # process_sql_script("drop_tables.sql")
     process_sql_script("create_tables.sql")
 
 
