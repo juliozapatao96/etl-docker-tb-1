@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Servicio para la base de datos PostgreSQL
+  db:
+    image: postgres:13
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: portafolio_inversiones
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: #jucezaor@17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  # Servicio para tu aplicación
+  app:
+    build: .
+    container_name: app_container
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "8833:8833"
+    environment:
+      DB_HOST: db  # Aquí es donde la red juega un papel importante
+      DB_PORT: 5432
+      DB_NAME: portafolio_inversiones
+      DB_USERNAME: postgres
+      DB_PASSWORD: #jucezaor@17
+    networks:
+      - app_network
+
+# Definimos una red compartida
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
