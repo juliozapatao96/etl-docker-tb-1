@@ -1,20 +1,16 @@
-# version: '3.8'
-
 services:
-  # Servicio para la base de datos PostgreSQL
   db:
     image: postgres:13
     container_name: postgres_container
-    environment:  
-      POSTGRES_DB: portafolio_inversiones  
-      POSTGRES_USER: postgres  
-      POSTGRES_PASSWORD: jucezaor@17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
 
-  # Servicio para tu aplicación
   app:
     build: .
     container_name: app_container
@@ -27,15 +23,14 @@ services:
     networks:
       - app_network
 
-  # Servicio para pgAdmin
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
     environment:
-      PGADMIN_DEFAULT_EMAIL: julioczapatao@abc.com  # Cambia esto por tu correo
-      PGADMIN_DEFAULT_PASSWORD: 12345  # Cambia esto por tu contraseña
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - "8080:80"  # Puedes cambiar el puerto si lo deseas
+      - "8080:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
@@ -43,7 +38,6 @@ services:
     networks:
       - app_network
 
-# Definimos una red compartida
 networks:
   app_network:
     driver: bridge
