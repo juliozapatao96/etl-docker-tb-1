@@ -122,3 +122,14 @@ GROUP BY
     month_year
 ORDER BY
     month_year;
+
+-- q5
+SELECT
+    ingestion_date,
+    DATE_TRUNC('month', ingestion_date) AS month_year,
+    aba
+FROM
+    historico_aba_macroactivos
+ORDER BY
+    month_year, ingestion_date;
+

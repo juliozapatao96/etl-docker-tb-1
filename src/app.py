@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 import urllib.parse
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 from src.scripts.python.process_and_transform_data import split_sql_script
 from src.etl import main as run_etl
@@ -48,7 +49,7 @@ app = dash.Dash(__name__)
 # Layout de la aplicación con el botón y las gráficas
 app.layout = html.Div([
     html.Div(id='status-message', style={'margin-bottom': '20px'}, children=["Listo para iniciar el procesamiento de datos."]),  # Mensaje inicial
-    html.Button('Procesar Datos', id='etl-button', n_clicks=0),
+    html.Button('Procesar Datos/Actualizar gráfica', id='etl-button', n_clicks=0),
     html.Div(id='output-container'),
     html.Div([
         dcc.Graph(id='stacked-column-chart-banca'),
@@ -65,11 +66,27 @@ app.layout = html.Div([
         dcc.Graph(id='pie-chart-activos-a'),
     ], style={'display': 'flex', 'flex-direction': 'row'}),
     
+    html.Div(
+        children=[
+            html.Div(
+                children=[
+                    html.H3('Seleccionar rango de fechas'),
+                    # Create a single date picker with identifier
+                    dcc.DatePickerRange(
+                        id='date-picker',
+                        start_date=None,
+                        end_date=None,
+                        display_format='DD/MM/YYYY'
+                    )
+                ]
+            )
+        ]
+    ),
+
     html.Div([
         dcc.Graph(id='line-chart-aba-mensual')
     ]),
 ])
-
 
 # Callback para ejecutar el proceso ETL y actualizar las gráficas
 @app.callback(
@@ -80,10 +97,12 @@ app.layout = html.Div([
      Output('pie-chart-macroactivos-ma', 'figure'),
      Output('pie-chart-activos-a', 'figure'),
      Output('line-chart-aba-mensual', 'figure'),
-     Output('status-message', 'children')],  # Agregar Output para el mensaje de estado
-    [Input('etl-button', 'n_clicks')]
+     Output('status-message', 'children')],
+    [Input('etl-button', 'n_clicks'),
+     Input('date-picker', 'start_date'),
+     Input('date-picker', 'end_date')]
 )
-def update_graphs(n_clicks) -> bool:
+def update_graphs(n_clicks, input_start_date, input_end_date):
     if n_clicks > 0:
         # Ejecutar el proceso ETL al presionar el botón
         try:
@@ -100,7 +119,8 @@ def update_graphs(n_clicks) -> bool:
                 df_banca = pd.read_sql(sql_statements[0], engine)
                 df_perfil_riesgo = pd.read_sql(sql_statements[1], engine)
                 df_cliente = pd.read_sql(sql_statements[2], engine)
-                df_aba_mensual = pd.read_sql(sql_statements[3], engine)
+                # df_aba_mensual = pd.read_sql(sql_statements[3], engine)
+                df_aba = pd.read_sql(sql_statements[4],engine)
             except Exception as e:
                 print(f"Error al ejecutar las consultas: {e}")
                 status_message = "Error al cargar los datos. Por favor, inténtelo de nuevo."
@@ -126,16 +146,39 @@ def update_graphs(n_clicks) -> bool:
             fig_pie_activos_a = px.pie(df_cliente, names='activo', values='total_aba', title='Activos del total de portafolio')
             fig_pie_activos_a.update_traces(textinfo='none')  # Ocultar los porcentajes
 
-            fig_line_chart_aba_mensual = px.line(df_aba_mensual, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+
+            df_aba_to_fig = df_aba.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
+            fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+
+            # Filtrar los datos por fecha si las fechas están disponibles
+            if input_start_date and input_end_date:
+                input_start_date = datetime.strptime(input_start_date, "%Y-%m-%d").date()
+                input_end_date = datetime.strptime(input_end_date, "%Y-%m-%d").date()
+                df_aba_dates = df_aba.copy(deep=True)
+                filtered_df = df_aba_dates[(df_aba_dates['ingestion_date'] >= input_start_date) & (df_aba_dates['ingestion_date'] <= input_end_date)]
+                df_aba_to_fig = filtered_df.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
+                fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
 
             status_message = "El proceso fue ejecutado exitosamente."
             # Retornar las gráficas actualizadas y el mensaje de estado
             return [fig_banca, fig_perfil_riesgo, fig_pie_macroactivos, fig_pie_activos, fig_pie_macroactivos_ma, fig_pie_activos_a, fig_line_chart_aba_mensual, status_message]
+        else:
+            # Filtrar los datos por fecha si las fechas están disponibles
+            if input_start_date and input_end_date:
+                input_start_date = datetime.strptime(input_start_date, "%Y-%m-%d").date()
+                input_end_date = datetime.strptime(input_end_date, "%Y-%m-%d").date()
+                df_aba = pd.read_sql(sql_statements[4],engine)
+                df_aba_dates = df_aba.copy(deep=True)
+                filtered_df = df_aba_dates[(df_aba_dates['ingestion_date'] >= input_start_date) & (df_aba_dates['ingestion_date'] <= input_end_date)]
+                df_aba_to_fig = filtered_df.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
+                fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+            else:
+                fig_line_chart_aba_mensual = dash.no_update
 
-        status_message = "No se encontraron archivos para procesar."
-        return [dash.no_update] * 7 + [status_message]
-        
-       
+            status_message = "No se encontraron archivos para procesar."
+            return [dash.no_update] * 6 + [fig_line_chart_aba_mensual] + [status_message]
+    
+
     return [dash.no_update] * 7 + ["Listo para iniciar el procesamiento de datos."]  # No hacer nada si no se ha presionado el botón
 
 if __name__ == '__main__':
