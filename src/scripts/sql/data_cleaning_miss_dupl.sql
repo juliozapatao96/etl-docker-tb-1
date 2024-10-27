@@ -1,5 +1,5 @@
 -- Elimina los valores Faltantes
-DELETE FROM public.historico_aba_macroactivos
+DELETE FROM public.temp_historico_aba_macroactivos
 WHERE id_sistema_cliente IS NULL OR id_sistema_cliente = 'NaN'  
 	OR cod_activo IS NULL OR cod_activo = 'NaN' 
 	OR cod_perfil_riesgo IS NULL OR cod_perfil_riesgo = 'NaN' 
@@ -16,11 +16,11 @@ SELECT DISTINCT ON (ingestion_year, ingestion_month, ingestion_day,
     id_sistema_cliente, cod_activo, macroactivo, aba, 
 	cod_perfil_riesgo, cod_banca, year, month) 
     *
-FROM public.historico_aba_macroactivos;
+FROM public.temp_historico_aba_macroactivos;
 
-TRUNCATE public.historico_aba_macroactivos;
+TRUNCATE public.temp_historico_aba_macroactivos;
 
-INSERT INTO public.historico_aba_macroactivos
+INSERT INTO public.temp_historico_aba_macroactivos
 SELECT * FROM temp_historico_aba;
 
 DROP TABLE temp_historico_aba;

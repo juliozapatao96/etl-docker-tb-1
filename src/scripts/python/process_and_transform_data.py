@@ -1,9 +1,9 @@
 
 import os
-from .connection_to_database_postgreSQL import *
+from .connection_to_database_postgreSQL import connect_to_posgreSQL, close_connection
 
 # Función para dividir el script en declaraciones individuales
-def split_sql_script(script):
+def split_sql_script(script: any) -> list:
     statements = []
     current_statement = []
     for line in script.splitlines():
