@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import dash
-from dash import dcc, html, Input, Output
+from dash import dcc, html, Input, Output, State
 from sqlalchemy import create_engine
 import urllib.parse
 from dotenv import load_dotenv
@@ -77,7 +77,8 @@ app.layout = html.Div([
                         start_date=None,
                         end_date=None,
                         display_format='DD/MM/YYYY'
-                    )
+                    ),
+                    html.Button('Limpiar Fechas', id='clear-date-button', n_clicks=0)
                 ]
             )
         ]
@@ -88,6 +89,22 @@ app.layout = html.Div([
     ]),
 ])
 
+@app.callback(
+    [Output('date-picker', 'start_date'),  # Resetear start_date
+     Output('date-picker', 'end_date')     # Resetear end_date
+    ],
+    [Input('clear-date-button', 'n_clicks')]
+)
+def clear_date(clear_date_clicks):
+    # Funcionalidad para limpiar las fechas
+    if clear_date_clicks > 0:
+        return [None, None]
+    else:
+        # No hacer nada si el botón no ha sido clicado aún
+        return [dash.no_update, dash.no_update]
+
+
+
 # Callback para ejecutar el proceso ETL y actualizar las gráficas
 @app.callback(
     [Output('stacked-column-chart-banca', 'figure'),
@@ -97,12 +114,14 @@ app.layout = html.Div([
      Output('pie-chart-macroactivos-ma', 'figure'),
      Output('pie-chart-activos-a', 'figure'),
      Output('line-chart-aba-mensual', 'figure'),
-     Output('status-message', 'children')],
-    [Input('etl-button', 'n_clicks'),
-     Input('date-picker', 'start_date'),
-     Input('date-picker', 'end_date')]
+     Output('status-message', 'children')
+     ],
+    [Input('etl-button', 'n_clicks')],
+     [State('date-picker', 'start_date'),
+     State('date-picker', 'end_date')]
 )
 def update_graphs(n_clicks, input_start_date, input_end_date):
+
     if n_clicks > 0:
         # Ejecutar el proceso ETL al presionar el botón
         try:
@@ -112,7 +131,7 @@ def update_graphs(n_clicks, input_start_date, input_end_date):
         except Exception as e:
             print(f"Error al ejecutar el proceso ETL: {e}")
             status_message = "Error al ejecutar el proceso ETL. Por favor, inténtelo de nuevo."
-            return dash.no_update + [status_message]  # Devolver solo el mensaje de error
+            return [dash.no_update]*7 + [status_message]  # Devolver solo el mensaje de error
         
         if etl_success:
             try:
@@ -124,7 +143,7 @@ def update_graphs(n_clicks, input_start_date, input_end_date):
             except Exception as e:
                 print(f"Error al ejecutar las consultas: {e}")
                 status_message = "Error al cargar los datos. Por favor, inténtelo de nuevo."
-                return dash.no_update + [status_message]  # Devolver solo el mensaje de error
+                return [dash.no_update]*7 + [status_message]  # Devolver solo el mensaje de error
 
             # Crear las gráficas nuevamente con los nuevos datos
             fig_banca = px.bar(df_banca, x='banca', y='porcentaje', color='macroactivo', title='Portafolio por porcentaje de Banca y Macroactivo')
@@ -163,23 +182,29 @@ def update_graphs(n_clicks, input_start_date, input_end_date):
             # Retornar las gráficas actualizadas y el mensaje de estado
             return [fig_banca, fig_perfil_riesgo, fig_pie_macroactivos, fig_pie_activos, fig_pie_macroactivos_ma, fig_pie_activos_a, fig_line_chart_aba_mensual, status_message]
         else:
+            df_aba = pd.read_sql(sql_statements[4],engine)
+            df_aba_dates = df_aba.copy(deep=True)
             # Filtrar los datos por fecha si las fechas están disponibles
             if input_start_date and input_end_date:
                 input_start_date = datetime.strptime(input_start_date, "%Y-%m-%d").date()
                 input_end_date = datetime.strptime(input_end_date, "%Y-%m-%d").date()
-                df_aba = pd.read_sql(sql_statements[4],engine)
-                df_aba_dates = df_aba.copy(deep=True)
-                filtered_df = df_aba_dates[(df_aba_dates['ingestion_date'] >= input_start_date) & (df_aba_dates['ingestion_date'] <= input_end_date)]
-                df_aba_to_fig = filtered_df.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
-                fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+                if (not df_aba_dates.empty):
+                    filtered_df = df_aba_dates[(df_aba_dates['ingestion_date'] >= input_start_date) & (df_aba_dates['ingestion_date'] <= input_end_date)]
+                    df_aba_to_fig = filtered_df.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
+                    fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+                else:   
+                    fig_line_chart_aba_mensual = dash.no_update
             else:
-                fig_line_chart_aba_mensual = dash.no_update
+                if (not df_aba_dates.empty):
+                    df_aba_to_fig = df_aba_dates.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
+                    fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
+                else:   
+                    fig_line_chart_aba_mensual = dash.no_update
 
             status_message = "No se encontraron archivos para procesar."
             return [dash.no_update] * 6 + [fig_line_chart_aba_mensual] + [status_message]
     
-
-    return [dash.no_update] * 7 + ["Listo para iniciar el procesamiento de datos."]  # No hacer nada si no se ha presionado el botón
+    return [dash.no_update] * 7 + ["Listo para iniciar el procesamiento de datos (campo de fechas debe estar vacío)."]  # No hacer nada si no se ha presionado el botón
 
 if __name__ == '__main__':
     app.run_server(debug=False)
