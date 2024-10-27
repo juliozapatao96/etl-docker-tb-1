@@ -16,7 +16,7 @@ def insert_data_csv_to_table(table_name, csv_path, connection):
         # Crear un string de %s por cada campo del csv separados por comas
         values = ', '.join(['%s'] * len(df.columns))
 
-        if table_name == "historico_aba_macroactivos":
+        if table_name.startswith("historico_aba_macroactivos"):
             table_name = "temp_historico_aba_macroactivos"
 
         # Crear la consulta que guardará la información en la tabla

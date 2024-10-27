@@ -38,7 +38,8 @@ def list_csv_files(directory):
         for file in os.listdir(directory):
             if file.endswith('.csv'):
                 # Add the file name without extension
-                csv_files.append(os.path.splitext(file)[0])
+                if (file.startswith("historico_aba_macroactivos")):
+                    csv_files.append(os.path.splitext(file)[0])
     else:
         print(f'La ruta "{directory}" no es un directorio válido.')
     
