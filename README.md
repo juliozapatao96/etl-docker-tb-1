@@ -88,14 +88,14 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
 
 A continuación se presentan algunas capturas de pantalla del dashboard:
 
-![Ejemplo de Dashboard 1](images/img-dash-1.png)
+![Ejemplo de Dashboard 1](img-dash-1.png)
 *Iniciando el Dashboard*
 
-![Ejemplo de Dashboard 2](images/img-dash-2.png)
+![Ejemplo de Dashboard 2](img-dash-2.png)
 *Procesamiento de datos ejecutado*
 
-![Ejemplo de Dashboard 3](images/img-dash-3.png)
+![Ejemplo de Dashboard 3](img-dash-3.png)
 *Gráfica sin rango de fechas aplicado*
 
-![Ejemplo de Dashboard 4](images/img-dash-4.png)
+![Ejemplo de Dashboard 4](img-dash-4.png)
 *Gráfica con rango de fechas aplicado*
