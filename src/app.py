@@ -184,27 +184,30 @@ def update_graphs(n_clicks, input_start_date, input_end_date):
         else:
             df_aba = pd.read_sql(sql_statements[4],engine)
             df_aba_dates = df_aba.copy(deep=True)
+            status_message = "No se encontraron archivos para procesar."
             # Filtrar los datos por fecha si las fechas están disponibles
             if input_start_date and input_end_date:
+                
                 input_start_date = datetime.strptime(input_start_date, "%Y-%m-%d").date()
                 input_end_date = datetime.strptime(input_end_date, "%Y-%m-%d").date()
                 if (not df_aba_dates.empty):
+                    status_message = "Gráfica 'Evolución del Promedio Mensual del ABA' se ha actualizado."
                     filtered_df = df_aba_dates[(df_aba_dates['ingestion_date'] >= input_start_date) & (df_aba_dates['ingestion_date'] <= input_end_date)]
                     df_aba_to_fig = filtered_df.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
                     fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
                 else:   
                     fig_line_chart_aba_mensual = dash.no_update
             else:
+                
                 if (not df_aba_dates.empty):
                     df_aba_to_fig = df_aba_dates.groupby('month_year')['aba'].agg('mean').reset_index(name='promedio_mensual_aba')
                     fig_line_chart_aba_mensual = px.line(df_aba_to_fig, x='month_year', y='promedio_mensual_aba', title='Evolución del Promedio Mensual del ABA')
                 else:   
                     fig_line_chart_aba_mensual = dash.no_update
 
-            status_message = "No se encontraron archivos para procesar."
             return [dash.no_update] * 6 + [fig_line_chart_aba_mensual] + [status_message]
     
-    return [dash.no_update] * 7 + ["Listo para iniciar el procesamiento de datos (campo de fechas debe estar vacío)."]  # No hacer nada si no se ha presionado el botón
+    return [dash.no_update] * 7 + ["Listo para iniciar el procesamiento de datos."]  # No hacer nada si no se ha presionado el botón
 
 if __name__ == '__main__':
     app.run_server(debug=False)

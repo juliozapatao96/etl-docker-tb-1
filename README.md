@@ -30,24 +30,38 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
 
 2. **Configurar el directorio de datos**:
 
-   Crea un directorio `data` dentro de `etl-docker-tb-1`. Este directorio debe contener los archivos CSV que se utilizarán en el análisis.
+   Crea los directorios `data` y `config` dentro de `etl-docker-tb-1`. Adicionalmente, dentro de `data` debe crear dos carpetas: `input-data` y `historical-data`. Al nivel de la carpeta `data`, deben quedar los archivos CSVs de configuración iniciales, y dentro de `input-data` debe transferir los archivos `historico_aba_macroactivos-string.csv`.
+   
 
  ```plaintext
    etl-docker-tb-1/
    ├── src/
+   ├── config/
    └── data/
+      ├── input-data/
+      └── historical-data/
    ...
  ```
 
 3. **Actualizar variables de entorno en `config.env`**:
 
-   Configura las credenciales de la base de datos en el archivo `config.env` ubicado en el directorio principal del proyecto dentro de la carpeta `config`:
+   Configura las credenciales de la base de datos en el archivo `config.env` que debe crearse en el directorio principal del proyecto dentro de la carpeta `config`:
    ```bash
-   DB_NAME=portafolio_inversiones
-   DB_USERNAME=postgres
-   DB_PASSWORD=tu_contraseña
+   DB_NAME=tu_base_de_datos
+   DB_USERNAME=tu_usuario_postgres
+   DB_PASSWORD=tu_contraseña_postgres
    DB_HOST=db
    DB_PORT=5432
+   ```
+
+   Adicionalmente, dentro de la carpeta del proyecto debe crear el archivo `.env` que contiene las variables de entorno que tomará Docker al inicializar los contenedores.
+   ```bash
+   POSTGRES_DB=tu_base_de_datos
+   POSTGRES_USER=tu_usuario_postgres
+   POSTGRES_PASSWORD=tu_contraseña_postgres
+   PGADMIN_DEFAULT_EMAIL=tu_email_pgadmin
+   PGADMIN_DEFAULT_PASSWORD=tu_usuario_pgadmin
+   ```
 
 ## Ejecución
 
@@ -60,6 +74,11 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
    Finalmente, en un navegador abre la aplicación con:
    ```bash
    http://localhost:8833/
+   ```
+
+   Dentro de la carpeta `input-data` debe agregar los archivos que la aplicación debe procesar, y posteriormente dar clic en el botón que se ubica en la zona superior izquierda llamado 'Procesar Datos/Actualizar Gráfica'. Debe presionar este botón cada vez que agregue un nuevo archivo a procesar en esta carpeta.
+
+   Por otra parte, es posible seleccionar o deseleccionar (con el botón 'Limpiar Fechas') un rango de fechas para analizar un periodo en específico para la gráfica 'Evolución del Promedio Mensual del ABA' y finalmente, dar clic en el botón indicado anteriormente.
 
 3. **Acceder a pgAdmin (opcional)**: Puedes acceder a él en:
    ```bash
@@ -70,7 +89,13 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu máquina loc
 A continuación se presentan algunas capturas de pantalla del dashboard:
 
 ![Ejemplo de Dashboard 1](images/img-dash-1.png)
-*Visualización de datos con Dash-Plotly parte 1*
+*Iniciando el Dashboard*
 
 ![Ejemplo de Dashboard 2](images/img-dash-2.png)
-*Visualización de datos con Dash-Plotly parte 2*
+*Procesamiento de datos ejecutado*
+
+![Ejemplo de Dashboard 3](images/img-dash-3.png)
+*Gráfica sin rango de fechas aplicado*
+
+![Ejemplo de Dashboard 4](images/img-dash-4.png)
+*Gráfica con rango de fechas aplicado*
